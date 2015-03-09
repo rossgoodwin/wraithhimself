@@ -53,7 +53,7 @@ for token in ijTokens[N:]:
 
     # print "TWEETED WORD " + str(i)
     # print "Tweeted"
-    sleep(5)
+    sleep(300)
 
     i += 1
 

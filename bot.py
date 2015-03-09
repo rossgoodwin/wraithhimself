@@ -7,7 +7,7 @@ import string
 import re
 import os
 
-N = 206
+N = 360
 
 CONSUMER_KEY = os.environ.get('TWITTER_CONSUMER_KEY')
 CONSUMER_SECRET = os.environ.get('TWITTER_CONSUMER_SECRET')
@@ -30,32 +30,32 @@ ijFile.close()
 
 i = N
 for token in ijTokens[N:]:
+    candidates = [] # list of result objects
+    while not candidates:
+        try:
+            results = api.search(q=token)
 
-	candidates = [] # list of result objects
-	while not candidates:
-		try:
-			results = api.search(q=token)
+            for r in results:
+                # print r.text + "\n"
+                if re.match("\.?[@#]?%s([^a-z]|$)"%token,r.text.lower()) is not None:
+                    # print "\n\nMATCH FOUND\n\n"
+                    candidates.append(r)
 
-			for r in results:
-				# print r.text + "\n"
-				if re.match("\.?[@#]?%s([^a-z]|$)"%token,r.text.lower()) is not None:
-					# print "\n\nMATCH FOUND\n\n"
-					candidates.append(r)
+            sleep(5)
 
-			sleep(5)
+        except tweepy.TweepError:
+            # print "\n\nRATE LIMIT REACHED\n\n"
+            # print "Tweep Error"
+            sleep(60)
+            continue
 
-		except:
-			# print "\n\nRATE LIMIT REACHED\n\n"
-			sleep(300)
-			continue
+    api.retweet(candidates[0].id)
 
-	api.retweet(candidates[0].id)
+    # print "TWEETED WORD " + str(i)
+    # print "Tweeted"
+    sleep(5)
 
-	# print "TWEETED WORD " + str(i)
-
-	sleep(300)
-
-	i += 1
+    i += 1
 
 
 

@@ -44,16 +44,16 @@ for token in ijTokens[N:]:
 
 			sleep(5)
 
-		except tweepy.TweepError:
+		except:
 			# print "\n\nRATE LIMIT REACHED\n\n"
-			sleep(60)
+			sleep(300)
 			continue
 
 	api.retweet(candidates[0].id)
 
 	# print "TWEETED WORD " + str(i)
 
-	sleep(60)
+	sleep(300)
 
 	i += 1
 

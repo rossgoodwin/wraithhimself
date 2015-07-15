@@ -7,8 +7,6 @@ import string
 import re
 import os
 
-N = 362
-
 CONSUMER_KEY = os.environ.get('TWITTER_CONSUMER_KEY')
 CONSUMER_SECRET = os.environ.get('TWITTER_CONSUMER_SECRET')
 
@@ -24,12 +22,12 @@ ijFile = open('ij.json', 'r')
 ijTokens = json.load(ijFile)
 ijFile.close()
 
-# print "SLEEPING 15 MIN..."
-# sleep(900)
-# print "...DONE SLEEPING"
+# Check status
+statusFile = open('status.txt', 'r')
+n = int(statusFile.read().strip())
+statusFile.close()
 
-i = N
-for token in ijTokens[N:]:
+for token in ijTokens[n:]:
     candidates = [] # list of result objects
     while not candidates:
         try:
@@ -51,11 +49,16 @@ for token in ijTokens[N:]:
 
     api.retweet(candidates[0].id)
 
+    n += 1
+
+    with open('status.txt', 'w') as outfile:
+        outfile.write(str(n))
+
     # print "TWEETED WORD " + str(i)
     # print "Tweeted"
-    sleep(300)
+    sleep(120)
 
-    i += 1
+    
 
 
 
